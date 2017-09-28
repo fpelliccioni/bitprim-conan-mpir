@@ -70,7 +70,31 @@ class BitprimMpirConan(ConanFile):
         self.output.warn("*** Detected OS: %s" % (self.settings.os))
         if self.settings.compiler == "Visual Studio":
             self.output.warn("*** Detected Visual Studio version: %s" % (self.settings.compiler.version))
-            
+
+
+        if self.settings.compiler.version == 14:
+            build_dir = 'build.vc14'
+        elif  self.settings.compiler.version == 15:
+            build_dir = 'build.vc15'
+
+        build_path = os.path.join(self.ZIP_FOLDER_NAME, build_dir, 'lib_mpir_haswell_avx')
+        project_file = os.path.join(build_path, 'lib_mpir_haswell_avx.vcxproj')
+
+        self.output.warn("*** Detected build_path:   %s" % (build_path))
+        self.output.warn("*** Detected project_file: %s" % (project_file))
+
+        # build_command = tools.build_sln_command(self.settings, "myfile.sln", targets=["SDL2_image"])
+        build_command = tools.build_sln_command(self.settings, project_file)
+        command = "%s && %s" % (tools.vcvars_command(self.settings), build_command)
+
+        self.output.warn("*** Detected command: %s" % (command))
+
+
+        # self.run(command)
+
+
+        # with tools.chdir(self.ZIP_FOLDER_NAME):
+
         # config_options_string = ""
 
         # for option_name in self.options.values.fields:
