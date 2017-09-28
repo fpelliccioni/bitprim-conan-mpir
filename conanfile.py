@@ -94,6 +94,7 @@ class BitprimMpirConan(ConanFile):
 
 
         batch_file = os.path.join(build_path, 'msbuild.bat')
+        self.output.warn("*** Detected batch_file:   %s" % (batch_file))
 
         # msbuild.bat haswell_avx lib x64 release
 
