@@ -23,7 +23,7 @@ class BitprimMpirConan(ConanFile):
     default_options = "shared=False", "disable_assembly=False", "enable_fat=False", \
                       "enable_cxx=True", "disable-fft=False", "enable-assert=False"
 
-    requires = "m4/1.4.18@bitprim/stable"
+    # requires = "m4/1.4.18@bitprim/stable"
 
     def source(self):
         # http://mpir.org/mpir-3.0.0.tar.bz2
