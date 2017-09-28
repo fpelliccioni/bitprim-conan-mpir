@@ -3,6 +3,7 @@ import os, shutil
 from conans.tools import download, unzip, replace_in_file, check_md5
 from conans import CMake
 from conans import tools
+import subprocess
 
 class BitprimMpirConan(ConanFile):
     name = "mpir"
@@ -77,17 +78,47 @@ class BitprimMpirConan(ConanFile):
         elif  self.settings.compiler.version == 15:
             build_dir = 'build.vc15'
 
-        build_path = os.path.join(self.ZIP_FOLDER_NAME, build_dir, 'lib_mpir_haswell_avx')
-        project_file = os.path.join(build_path, 'lib_mpir_haswell_avx.vcxproj')
-
+        build_path = os.path.join(self.ZIP_FOLDER_NAME, build_dir)
         self.output.warn("*** Detected build_path:   %s" % (build_path))
-        self.output.warn("*** Detected project_file: %s" % (project_file))
 
-        # build_command = tools.build_sln_command(self.settings, "myfile.sln", targets=["SDL2_image"])
-        build_command = tools.build_sln_command(self.settings, project_file)
-        command = "%s && %s" % (tools.vcvars_command(self.settings), build_command)
+        # # ----------------------------------
+        # project_file = os.path.join(build_path, 'lib_mpir_haswell_avx', 'lib_mpir_haswell_avx.vcxproj')
+        # self.output.warn("*** Detected build_path:   %s" % (build_path))
+        # self.output.warn("*** Detected project_file: %s" % (project_file))
 
-        self.output.warn("*** Detected command: %s" % (command))
+        # # build_command = tools.build_sln_command(self.settings, "myfile.sln", targets=["SDL2_image"])
+        # build_command = tools.build_sln_command(self.settings, project_file)
+        # command = "%s && %s" % (tools.vcvars_command(self.settings), build_command)
+        # self.output.warn("*** Detected command: %s" % (command))
+        # # ----------------------------------
+
+
+        batch_file = os.path.join(build_path, 'msbuild.bat')
+
+        # msbuild.bat haswell_avx lib x64 release
+
+        subprocess.check_call([batch_file, "haswell_avx", "lib", "x64", "release"])
+
+
+        # msbdir = 'C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/MSBuild/15.0/Bin'
+        # msbuild_exe = msbdir + '/msbuild.exe'
+        # # %msbdir%\msbuild.exe /p:Platform=%plat% /p:Configuration=%conf% %srcdir%\%src%\%src%.vcxproj
+        # subprocess.check_call([msbuild_exe, "your", "arguments", "comma", "separated"])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         # self.run(command)
