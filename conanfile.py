@@ -110,10 +110,11 @@ class BitprimMpirConan(ConanFile):
         yasm_path = '%s\\' % (os.getcwd()) 
         os.environ['YASMPATH'] = yasm_path
 
-        shutil.copytree('C:/Program Files/Git/usr/bin', 'C:/Bitprim/usr/bin')
 
-        # self.run("dir \"C:/Program Files/Git/usr/bin\"")
-        self.run("dir C:\\Bitprim\\usr\\bin")
+        if not os.path.exists('C:/Bitprim/usr/bin'):
+            shutil.copytree('C:/Program Files/Git/usr/bin', 'C:/Bitprim/usr/bin')
+            # self.run("dir \"C:/Program Files/Git/usr/bin\"")
+            self.run("dir C:\\Bitprim\\usr\\bin")
 
 
         # self.output.warn("*** PATH: %s" % (os.environ['PATH']))
