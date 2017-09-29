@@ -147,7 +147,8 @@ class BitprimMpirConan(ConanFile):
             self.output.warn("*** $MAKE: %s" % (os.environ.get('MAKE')))
 
             self.output.warn("*** $SHELL: %s" % (os.environ.get('SHELL')))
-            os.environ['SHELL'] = '"C:/Program Files/Git/usr/bin/sh.exe"'
+            # os.environ['SHELL'] = '"C:/Program Files/Git/usr/bin/sh.exe"'
+            os.environ['SHELL'] = 'pepe.exe'
             self.output.warn("*** $SHELL: %s" % (os.environ.get('SHELL')))
 
 
@@ -191,7 +192,8 @@ class BitprimMpirConan(ConanFile):
 
                 # self.run("dir C:\MinGw\bin\")
                 # self.run("cd %s && C:\MinGw\bin\make" % self.ZIP_FOLDER_NAME)
-                self.run("cd %s && mingw32-make MAKE=mingw32-make SHELL=\"C:/Program Files/Git/usr/bin/sh.exe\"" % self.ZIP_FOLDER_NAME)
+                # self.run("cd %s && mingw32-make MAKE=mingw32-make SHELL=\"C:/Program Files/Git/usr/bin/sh.exe\"" % self.ZIP_FOLDER_NAME)
+                self.run("cd %s && mingw32-make MAKE=mingw32-make SHELL=pepe.exe" % self.ZIP_FOLDER_NAME)
 
             os.environ['PATH'] = old_path
 
