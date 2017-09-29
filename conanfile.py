@@ -177,6 +177,12 @@ class BitprimMpirConan(ConanFile):
 
                 self.run("cd %s && type Makefile" % self.ZIP_FOLDER_NAME)
 
+
+                self.output.warn("*** $MAKE: %s" % (os.environ.get('MAKE')))
+                os.environ['MAKE'] = 'mingw32-make'
+                self.output.warn("*** $MAKE: %s" % (os.environ.get('MAKE')))
+
+
                 # self.run("dir C:\MinGw\bin\")
                 # self.run("cd %s && C:\MinGw\bin\make" % self.ZIP_FOLDER_NAME)
                 self.run("cd %s && mingw32-make" % self.ZIP_FOLDER_NAME)
