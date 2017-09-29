@@ -27,6 +27,10 @@ class BitprimMpirConan(ConanFile):
 
     # requires = "m4/1.4.18@bitprim/stable"
 
+    def requirements(self):
+        if self.settings.os == "Windows" and self.settings.compiler == "gcc":
+            self.requires.add("m4/1.4.18@bitprim/stable")
+
     def source(self):
         # http://mpir.org/mpir-3.0.0.tar.bz2
         zip_name = "mpir-%s.tar.bz2" % self.version
@@ -107,9 +111,9 @@ class BitprimMpirConan(ConanFile):
         yasm_path = '%s\\' % (os.getcwd()) 
         os.environ['YASMPATH'] = yasm_path
 
-        self.output.warn("*** PATH: %s" % (os.environ["PATH"]))
-        os.environ["PATH"] += os.pathsep + yasm_path
-        self.output.warn("*** PATH: %s" % (os.environ["PATH"]))
+        self.output.warn("*** PATH: %s" % (os.environ['PATH']))
+        os.environ['PATH'] += os.pathsep + yasm_path
+        self.output.warn("*** PATH: %s" % (os.environ['PATH']))
 
         if self.settings.os == "Windows" and self.settings.compiler == "Visual Studio":
 
@@ -126,6 +130,22 @@ class BitprimMpirConan(ConanFile):
 
         # elif self.settings.os == "Windows" and self.settings.compiler == "gcc":
         else:
+
+
+            print(os.path.dirname(os.path.abspath(__file__)))
+            print(os.getcwd())
+
+            print('-*-*-*-*-*-*-*-*-*-*')
+            print(os.environ['PATH'])
+
+            old_path = os.environ['PATH']
+
+            os.environ['PATH'] += os.pathsep + os.getcwd()
+
+            print('-*-*-*-*-*-*-*-*-*-*')
+            print(os.environ['PATH'])
+
+
             config_options_string = ""
 
             for option_name in self.options.values.fields:
@@ -154,8 +174,13 @@ class BitprimMpirConan(ConanFile):
                 # self.run("dir C:\MinGw\bin\")
                 self.run("cd %s && C:\MinGw\bin\make" % self.ZIP_FOLDER_NAME)
 
-    # def imports(self):
-    #     self.copy("m4", dst=".", src="bin")
+            os.environ['PATH'] = old_path
+
+            print('-*-*-*-*-*-*-*-*-*-*')
+            print(os.environ['PATH'])
+
+    def imports(self):
+        self.copy("m4", dst=".", src="bin")
 
     def package(self):
         # lib_dir = 'build/%s/lib/x64/Release'  % (self.ZIP_FOLDER_NAME)
