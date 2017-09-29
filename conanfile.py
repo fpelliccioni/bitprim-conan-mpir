@@ -137,9 +137,14 @@ class BitprimMpirConan(ConanFile):
             old_path = os.environ['PATH']
             os.environ['PATH'] += os.pathsep + os.getcwd()
 
+
             # print('-*-*-*-*-*-*-*-*-*-*')
             # print(os.environ['PATH'])
             # self.run("dir %s" % os.getcwd())
+
+            self.output.warn("*** $MAKE: %s" % (os.environ.get('MAKE')))
+            os.environ['MAKE'] = 'mingw32-make'
+            self.output.warn("*** $MAKE: %s" % (os.environ.get('MAKE')))
 
             config_options_string = ""
 
@@ -172,22 +177,13 @@ class BitprimMpirConan(ConanFile):
                 # self.env_info.CONAN_CMAKE_GENERATOR = "MinGW Makefiles"
                 # self.env_info.CXX = os.path.join(self.package_folder, "bin", "g++.exe")
                 # self.env_info.CC = os.path.join(self.package_folder, "bin", "gcc.exe")
-
-                self.output.warn("*** self.env_info.MINGW_HOME: %s" % (self.env_info.MINGW_HOME))
+                # self.output.warn("*** self.env_info.MINGW_HOME: %s" % (self.env_info.MINGW_HOME))
 
                 self.run("cd %s && type Makefile" % self.ZIP_FOLDER_NAME)
 
-
-                self.output.warn("*** $MAKE: %s" % (os.environ.get('MAKE')))
-                os.environ['MAKE'] = 'mingw32-make'
-                self.output.warn("*** $MAKE: %s" % (os.environ.get('MAKE')))
-
-
                 # self.run("dir C:\MinGw\bin\")
                 # self.run("cd %s && C:\MinGw\bin\make" % self.ZIP_FOLDER_NAME)
-                self.run("cd %s && mingw32-make" % self.ZIP_FOLDER_NAME)
-
-
+                self.run("cd %s && mingw32-make MAKE=mingw32-make" % self.ZIP_FOLDER_NAME)
 
             os.environ['PATH'] = old_path
 
