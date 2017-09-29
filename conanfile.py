@@ -145,6 +145,7 @@ class BitprimMpirConan(ConanFile):
             print('-*-*-*-*-*-*-*-*-*-*')
             print(os.environ['PATH'])
 
+            self.run("dir %s" % os.getcwd())
 
             config_options_string = ""
 
