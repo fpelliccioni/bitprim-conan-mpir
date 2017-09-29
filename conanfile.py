@@ -112,7 +112,7 @@ class BitprimMpirConan(ConanFile):
 
         shutil.copytree('C:/Program Files/Git/usr/bin', 'C:/Bitprim/usr/bin')
 
-        self.run("dir C:/Program Files/Git/usr/bin")
+        # self.run("dir \"C:/Program Files/Git/usr/bin\"")
         self.run("dir C:/Bitprim/usr/bin")
 
 
