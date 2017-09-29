@@ -110,9 +110,19 @@ class BitprimMpirConan(ConanFile):
         yasm_path = '%s\\' % (os.getcwd()) 
         os.environ['YASMPATH'] = yasm_path
 
-        self.output.warn("*** PATH: %s" % (os.environ['PATH']))
+        shutil.copytree('C:/Program Files/Git/usr/bin', 'C:/Bitprim/usr/bin')
+
+        self.run("dir C:/Program Files/Git/usr/bin")
+        self.run("dir C:/Bitprim/usr/bin")
+
+
+        # self.output.warn("*** PATH: %s" % (os.environ['PATH']))
         os.environ['PATH'] += os.pathsep + yasm_path
         # self.output.warn("*** PATH: %s" % (os.environ['PATH']))
+
+        os.environ['PATH'] = 'C:/Bitprim/usr/bin' + os.pathsep + os.environ['PATH']
+        self.output.warn("*** PATH: %s" % (os.environ['PATH']))
+
 
         if self.settings.os == "Windows" and self.settings.compiler == "Visual Studio":
 
