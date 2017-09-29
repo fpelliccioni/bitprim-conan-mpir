@@ -4,6 +4,7 @@ from conans.tools import download, unzip, replace_in_file, check_md5
 from conans import CMake
 from conans import tools
 import subprocess
+import shutil
 
 class BitprimMpirConan(ConanFile):
     name = "mpir"
@@ -37,6 +38,33 @@ class BitprimMpirConan(ConanFile):
         unzip(zip_name)
         os.unlink(zip_name)
 
+
+
+        self.run("git clone https://github.com/ShiftMediaProject/VSYASM.git")
+        # self.run("cd VSYASM && install_script.bat")
+
+        shutil.copy('./VSYASM/yasm.props', './mpir-3.0.0/build.vc/vsyasm.props')
+        shutil.copy('./VSYASM/yasm.targets', './mpir-3.0.0/build.vc/vsyasm.targets')
+        shutil.copy('./VSYASM/yasm.xml', './mpir-3.0.0/build.vc/vsyasm.xml')
+
+        yasm_version = '1.3.0'
+        sys_arch = '64'
+        yasm_site = 'http://www.tortall.net/projects/yasm/releases/'
+        yasm_exe = 'yasm-%s-win%s.exe' % (yasm_version, sys_arch)
+        yasm_download = '%s/%s' % (yasm_site, yasm_exe)
+        self.output.warn("yasm_download: %s" % (yasm_download))
+        
+        download(yasm_download, 'yasm.exe')
+
+        yasm_path = '%s\\' % (os.getcwd()) 
+        self.output.warn("yasm_path: %s" % (yasm_path))
+
+        
+
+        self.output.warn("YASMPATH: %s" % (os.environ.get('YASMPATH')))
+        os.environ['YASMPATH'] = yasm_path
+        self.output.warn("YASMPATH: %s" % (os.environ['YASMPATH']))
+
     def config(self):
         pass
         # del self.settings.compiler.libcxx
@@ -68,6 +96,15 @@ class BitprimMpirConan(ConanFile):
     #     return command
 
     def build(self):
+        yasm_path = '%s\\' % (os.getcwd()) 
+        self.output.warn("yasm_path: %s" % (yasm_path))
+
+        self.output.warn("YASMPATH: %s" % (os.environ.get('YASMPATH')))
+        # self.output.warn("YASMPATH: %s" % (os.environ['YASMPATH']))
+        os.environ['YASMPATH'] = yasm_path
+        self.output.warn("YASMPATH: %s" % (os.environ['YASMPATH']))
+
+
         self.output.warn("*** Detected OS: %s" % (self.settings.os))
         if self.settings.compiler == "Visual Studio":
             self.output.warn("*** Detected Visual Studio version: %s" % (self.settings.compiler.version))
@@ -92,13 +129,15 @@ class BitprimMpirConan(ConanFile):
         # self.output.warn("*** Detected command: %s" % (command))
         # # ----------------------------------
 
+        # batch_file = os.path.join(build_path, 'msbuild.bat')
+        # self.output.warn("*** Detected batch_file:   %s" % (batch_file))
+        # # msbuild.bat haswell_avx lib x64 release
+        # subprocess.check_call([batch_file, "haswell_avx", "lib", "x64", "release"])
 
-        batch_file = os.path.join(build_path, 'msbuild.bat')
-        self.output.warn("*** Detected batch_file:   %s" % (batch_file))
 
-        # msbuild.bat haswell_avx lib x64 release
+        with tools.chdir(build_path):
+            self.run("msbuild.bat haswell_avx lib x64 release")
 
-        subprocess.check_call([batch_file, "haswell_avx", "lib", "x64", "release"])
 
 
         # msbdir = 'C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/MSBuild/15.0/Bin'
@@ -157,17 +196,23 @@ class BitprimMpirConan(ConanFile):
     # def imports(self):
     #     self.copy("m4", dst=".", src="bin")
 
-    # def package(self):
-    #     self.copy("*.h", "include", "%s" % (self.ZIP_FOLDER_NAME), keep_path=True)
-    #     if self.options.shared:
-    #         self.copy(pattern="*.so*", dst="lib", src=self.ZIP_FOLDER_NAME, keep_path=False)
-    #         self.copy(pattern="*.dll*", dst="bin", src=self.ZIP_FOLDER_NAME, keep_path=False)
-    #     else:
-    #         self.copy(pattern="*.a", dst="lib", src="%s" % self.ZIP_FOLDER_NAME, keep_path=False)
+    def package(self):
+        # lib_dir = 'build/%s/lib/x64/Release'  % (self.ZIP_FOLDER_NAME)
+        lib_dir = '%s/lib/x64/Release'  % (self.ZIP_FOLDER_NAME)
+        self.output.warn("lib_dir: %s" % (lib_dir))
 
-    #     self.copy(pattern="*.lib", dst="lib", src="%s" % self.ZIP_FOLDER_NAME, keep_path=False)
+        # C:\development\bitprim-conan-mpir\build\mpir-3.0.0\lib\x64\Release
+
+        self.copy("*.h", dst="include", src=lib_dir, keep_path=True)
+        if self.options.shared:
+            # self.copy(pattern="*.so*", dst="lib", src=lib_dir, keep_path=False)
+            self.copy(pattern="*.dll*", dst="bin", src=lib_dir, keep_path=False)
+        else:
+            self.copy(pattern="*.a", dst="lib", src=lib_dir, keep_path=False)
+
+        self.copy(pattern="*.lib", dst="lib", src=lib_dir, keep_path=False)
         
-    # def package_info(self):
-    #     self.cpp_info.libs = ['gmp']
+    def package_info(self):
+        self.cpp_info.libs = ['mpir']
 
 
