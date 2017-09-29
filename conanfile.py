@@ -183,6 +183,7 @@ class BitprimMpirConan(ConanFile):
     def imports(self):
         self.copy("m4", dst=".", src="bin")
         self.copy("m4.exe", dst=".", src="bin")
+        self.copy("regex2.dll", dst=".", src="bin")
 
     def package(self):
         # lib_dir = 'build/%s/lib/x64/Release'  % (self.ZIP_FOLDER_NAME)
