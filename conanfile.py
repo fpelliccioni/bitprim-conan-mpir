@@ -220,6 +220,8 @@ class BitprimMpirConan(ConanFile):
         lib_dir = '%s/lib/x64/Release'  % (self.ZIP_FOLDER_NAME)
         self.output.warn("lib_dir: %s" % (lib_dir))
 
+        self.run("dir %s\\lib" % (self.ZIP_FOLDER_NAME))
+
         # C:\development\bitprim-conan-mpir\build\mpir-3.0.0\lib\x64\Release
 
         self.copy("*.h", dst="include", src=lib_dir, keep_path=True)
@@ -230,6 +232,7 @@ class BitprimMpirConan(ConanFile):
             self.copy(pattern="*.a", dst="lib", src=lib_dir, keep_path=False)
 
         self.copy(pattern="*.lib", dst="lib", src=lib_dir, keep_path=False)
+        self.copy(pattern="*.la", dst="lib", src=lib_dir, keep_path=False)
         
     def package_info(self):
         self.output.warn("*** self.cpp_info.libs:   %s" % (self.cpp_info.libs))
