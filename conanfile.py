@@ -45,14 +45,16 @@ class BitprimMpirConan(ConanFile):
         
         download(yasm_download, 'yasm.exe')
 
-        yasm_path = '%s\\' % (os.getcwd()) 
-        os.environ['YASMPATH'] = yasm_path
-
         if self.settings.os == "Windows" and self.settings.compiler == "Visual Studio":
+            yasm_path = '%s\\' % (os.getcwd()) 
+            os.environ['YASMPATH'] = yasm_path
+
             self.run("git clone https://github.com/ShiftMediaProject/VSYASM.git")
             shutil.copy('./VSYASM/yasm.props', './mpir-3.0.0/build.vc/vsyasm.props')
             shutil.copy('./VSYASM/yasm.targets', './mpir-3.0.0/build.vc/vsyasm.targets')
             shutil.copy('./VSYASM/yasm.xml', './mpir-3.0.0/build.vc/vsyasm.xml')
+        elif self.settings.os == "Windows" and self.settings.compiler == "gcc":
+            shutil.copy('./yasm.exe', 'C:/Windows/system32/yasm.exe')
 
     def config(self):
         pass
