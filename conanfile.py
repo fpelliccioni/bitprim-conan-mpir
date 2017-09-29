@@ -213,6 +213,7 @@ class BitprimMpirConan(ConanFile):
         self.copy(pattern="*.lib", dst="lib", src=lib_dir, keep_path=False)
         
     def package_info(self):
+        self.output.warn("*** self.cpp_info.libs:   %s" % (self.cpp_info.libs))
         self.cpp_info.libs = ['mpir']
-
+        self.output.warn("*** self.cpp_info.libs:   %s" % (self.cpp_info.libs))
 
