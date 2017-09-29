@@ -61,10 +61,12 @@ class BitprimMpirConan(ConanFile):
                     print(os.path.join("./", file))
 
             shutil.copy('./yasm.exe', 'C:/Windows/system32/')
+            shutil.copy('./yasm.exe', 'C:/MinGw/bin/')
+            
 
-            for file in os.listdir("C:/Windows/system32/"):
+            for file in os.listdir("C:/MinGw/bin/"):
                 if file.endswith("yasm.exe"):
-                    print(os.path.join("./", file))
+                    print(os.path.join("C:/MinGw/bin/", file))
 
     def config(self):
         pass
