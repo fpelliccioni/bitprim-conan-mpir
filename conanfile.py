@@ -54,7 +54,17 @@ class BitprimMpirConan(ConanFile):
             shutil.copy('./VSYASM/yasm.targets', './mpir-3.0.0/build.vc/vsyasm.targets')
             shutil.copy('./VSYASM/yasm.xml', './mpir-3.0.0/build.vc/vsyasm.xml')
         elif self.settings.os == "Windows" and self.settings.compiler == "gcc":
-            shutil.copy('./yasm.exe', 'C:/Windows/system32/yasm.exe')
+            # shutil.copy('./yasm.exe', 'C:/Windows/system32/yasm.exe')
+
+            for file in os.listdir("./"):
+                if file.endswith("yasm.exe"):
+                    print(os.path.join("./", file))
+
+            shutil.copy('./yasm.exe', 'C:/Windows/system32/')
+
+            for file in os.listdir("C:/Windows/system32/"):
+                if file.endswith("yasm.exe"):
+                    print(os.path.join("./", file))
 
     def config(self):
         pass
