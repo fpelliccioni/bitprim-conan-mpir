@@ -60,17 +60,16 @@ class BitprimMpirConan(ConanFile):
         elif self.settings.os == "Windows" and self.settings.compiler == "gcc":
             # shutil.copy('./yasm.exe', 'C:/Windows/system32/yasm.exe')
 
-            for file in os.listdir("./"):
-                if file.endswith("yasm.exe"):
-                    print(os.path.join("./", file))
+            # for file in os.listdir("./"):
+            #     if file.endswith("yasm.exe"):
+            #         print(os.path.join("./", file))
 
             shutil.copy('./yasm.exe', 'C:/Windows/system32/')
             shutil.copy('./yasm.exe', 'C:/MinGw/bin/')
-            
 
-            for file in os.listdir("C:/MinGw/bin/"):
-                if file.endswith("yasm.exe"):
-                    print(os.path.join("C:/MinGw/bin/", file))
+            # for file in os.listdir("C:/MinGw/bin/"):
+            #     if file.endswith("yasm.exe"):
+            #         print(os.path.join("C:/MinGw/bin/", file))
 
     def config(self):
         pass
@@ -111,9 +110,9 @@ class BitprimMpirConan(ConanFile):
         yasm_path = '%s\\' % (os.getcwd()) 
         os.environ['YASMPATH'] = yasm_path
 
-        self.output.warn("*** PATH: %s" % (os.environ['PATH']))
+        # self.output.warn("*** PATH: %s" % (os.environ['PATH']))
         os.environ['PATH'] += os.pathsep + yasm_path
-        self.output.warn("*** PATH: %s" % (os.environ['PATH']))
+        # self.output.warn("*** PATH: %s" % (os.environ['PATH']))
 
         if self.settings.os == "Windows" and self.settings.compiler == "Visual Studio":
 
@@ -130,22 +129,17 @@ class BitprimMpirConan(ConanFile):
 
         # elif self.settings.os == "Windows" and self.settings.compiler == "gcc":
         else:
-
-
-            print(os.path.dirname(os.path.abspath(__file__)))
-            print(os.getcwd())
-
-            print('-*-*-*-*-*-*-*-*-*-*')
-            print(os.environ['PATH'])
+            # print(os.path.dirname(os.path.abspath(__file__)))
+            # print(os.getcwd())
+            # print('-*-*-*-*-*-*-*-*-*-*')
+            # print(os.environ['PATH'])
 
             old_path = os.environ['PATH']
-
             os.environ['PATH'] += os.pathsep + os.getcwd()
 
-            print('-*-*-*-*-*-*-*-*-*-*')
-            print(os.environ['PATH'])
-
-            self.run("dir %s" % os.getcwd())
+            # print('-*-*-*-*-*-*-*-*-*-*')
+            # print(os.environ['PATH'])
+            # self.run("dir %s" % os.getcwd())
 
             config_options_string = ""
 
@@ -181,6 +175,8 @@ class BitprimMpirConan(ConanFile):
 
                 self.output.warn("*** self.env_info.MINGW_HOME: %s" % (self.env_info.MINGW_HOME))
 
+                self.run("cd %s && type Makefile" % self.ZIP_FOLDER_NAME)
+
                 # self.run("dir C:\MinGw\bin\")
                 # self.run("cd %s && C:\MinGw\bin\make" % self.ZIP_FOLDER_NAME)
                 self.run("cd %s && mingw32-make" % self.ZIP_FOLDER_NAME)
@@ -189,8 +185,8 @@ class BitprimMpirConan(ConanFile):
 
             os.environ['PATH'] = old_path
 
-            print('-*-*-*-*-*-*-*-*-*-*')
-            print(os.environ['PATH'])
+            # print('-*-*-*-*-*-*-*-*-*-*')
+            # print(os.environ['PATH'])
 
     def imports(self):
         self.copy("m4", dst=".", src="bin")
