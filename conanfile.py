@@ -145,7 +145,12 @@ class BitprimMpirConan(ConanFile):
             self.output.warn("*** $MAKE: %s" % (os.environ.get('MAKE')))
             os.environ['MAKE'] = 'mingw32-make'
             self.output.warn("*** $MAKE: %s" % (os.environ.get('MAKE')))
+
             self.output.warn("*** $SHELL: %s" % (os.environ.get('SHELL')))
+            os.environ['SHELL'] = '"C:/Program Files/Git/usr/bin/sh.exe"'
+            self.output.warn("*** $SHELL: %s" % (os.environ.get('SHELL')))
+
+
 
             config_options_string = ""
 
