@@ -172,9 +172,20 @@ class BitprimMpirConan(ConanFile):
             if self.settings.os != "Windows":
                 self.run("cd %s && make" % self.ZIP_FOLDER_NAME)
             else:
+
+                # self.env_info.path.append(os.path.join(self.package_folder, "bin"))
+                # self.env_info.MINGW_HOME = str(self.package_folder)
+                # self.env_info.CONAN_CMAKE_GENERATOR = "MinGW Makefiles"
+                # self.env_info.CXX = os.path.join(self.package_folder, "bin", "g++.exe")
+                # self.env_info.CC = os.path.join(self.package_folder, "bin", "gcc.exe")
+
+                self.output.warn("*** self.env_info.MINGW_HOME: %s" % (self.env_info.MINGW_HOME))
+
                 # self.run("dir C:\MinGw\bin\")
                 # self.run("cd %s && C:\MinGw\bin\make" % self.ZIP_FOLDER_NAME)
                 self.run("cd %s && mingw32-make" % self.ZIP_FOLDER_NAME)
+
+
 
             os.environ['PATH'] = old_path
 
