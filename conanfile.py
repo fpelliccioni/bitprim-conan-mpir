@@ -221,7 +221,13 @@ class BitprimMpirConan(ConanFile):
         lib_dir = '%s/lib/x64/Release'  % (self.ZIP_FOLDER_NAME)
         self.output.warn("lib_dir: %s" % (lib_dir))
 
-        self.run("dir %s\\lib" % (self.ZIP_FOLDER_NAME))
+        # self.run("dir %s\\lib" % (self.ZIP_FOLDER_NAME))
+        self.run("dir %s" % (self.ZIP_FOLDER_NAME))
+
+        self.run("dir %s\*.a /s" % (self.ZIP_FOLDER_NAME))
+        self.run("dir %s\*.la /s" % (self.ZIP_FOLDER_NAME))
+
+
 
         # C:\development\bitprim-conan-mpir\build\mpir-3.0.0\lib\x64\Release
 
