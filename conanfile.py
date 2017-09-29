@@ -180,11 +180,13 @@ class BitprimMpirConan(ConanFile):
                 # self.env_info.CC = os.path.join(self.package_folder, "bin", "gcc.exe")
                 # self.output.warn("*** self.env_info.MINGW_HOME: %s" % (self.env_info.MINGW_HOME))
 
-                self.run("cd %s && type Makefile" % self.ZIP_FOLDER_NAME)
+                # self.run("cd %s && type Makefile" % self.ZIP_FOLDER_NAME)
+
+                self.output.warn("*** $SHELL: %s" % (os.environ.get('SHELL')))
 
                 # self.run("dir C:\MinGw\bin\")
                 # self.run("cd %s && C:\MinGw\bin\make" % self.ZIP_FOLDER_NAME)
-                self.run("cd %s && mingw32-make MAKE=mingw32-make" % self.ZIP_FOLDER_NAME)
+                self.run("cd %s && mingw32-make MAKE=mingw32-make SHELL=\"C:/Program Files/Git/usr/bin/sh.exe\"" % self.ZIP_FOLDER_NAME)
 
             os.environ['PATH'] = old_path
 
