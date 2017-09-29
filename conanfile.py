@@ -173,7 +173,8 @@ class BitprimMpirConan(ConanFile):
                 self.run("cd %s && make" % self.ZIP_FOLDER_NAME)
             else:
                 # self.run("dir C:\MinGw\bin\")
-                self.run("cd %s && C:\MinGw\bin\make" % self.ZIP_FOLDER_NAME)
+                # self.run("cd %s && C:\MinGw\bin\make" % self.ZIP_FOLDER_NAME)
+                self.run("cd %s && mingw32-make" % self.ZIP_FOLDER_NAME)
 
             os.environ['PATH'] = old_path
 
