@@ -107,6 +107,10 @@ class BitprimMpirConan(ConanFile):
         yasm_path = '%s\\' % (os.getcwd()) 
         os.environ['YASMPATH'] = yasm_path
 
+        self.output.warn("*** PATH: %s" % (os.environ["PATH"]))
+        os.environ["PATH"] += os.pathsep + yasm_path
+        self.output.warn("*** PATH: %s" % (os.environ["PATH"]))
+
         if self.settings.os == "Windows" and self.settings.compiler == "Visual Studio":
 
             if self.settings.compiler.version == 14:
