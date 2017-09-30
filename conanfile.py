@@ -219,20 +219,23 @@ class BitprimMpirConan(ConanFile):
     def package(self):
 
         if self.settings.os == "Windows" and self.settings.compiler == "gcc":
-            # lib_dir = 'build/%s/lib/x64/Release'  % (self.ZIP_FOLDER_NAME)
+            inc_dir = '%s'  % (self.ZIP_FOLDER_NAME)
             lib_dir = '%s/.libs'  % (self.ZIP_FOLDER_NAME)
             self.output.warn("lib_dir: %s" % (lib_dir))
 
-            self.run("dir %s\\.libs" % (self.ZIP_FOLDER_NAME))
+            # self.run("dir %s\\.libs" % (self.ZIP_FOLDER_NAME))
             # self.run("dir %s" % (self.ZIP_FOLDER_NAME))
             # self.run("dir %s\*.a /s" % (self.ZIP_FOLDER_NAME))
             # self.run("dir %s\*.la /s" % (self.ZIP_FOLDER_NAME))
             # self.run("dir %s\*.so /s" % (self.ZIP_FOLDER_NAME))
 
             # self.run("dir %s\config.h /s" % (self.ZIP_FOLDER_NAME))
-            self.run("dir %s\*.h /s" % (self.ZIP_FOLDER_NAME))
+            # self.run("dir %s\*.h /s" % (self.ZIP_FOLDER_NAME))
 
-            self.copy("*.h", dst="include", src=lib_dir, keep_path=True)
+            shutil.copy('%s/mpir.h'  % (inc_dir), '%s/gmp.h'  % (inc_dir))
+            shutil.copy('%s/mpirxx.h'  % (inc_dir), '%s/gmpxx.h'  % (inc_dir))
+
+            self.copy("*.h", dst="include", src=inc_dir, keep_path=True)
             # self.copy(pattern="*.so*", dst="lib", src=lib_dir, keep_path=False)
             self.copy(pattern="*.a", dst="lib", src=lib_dir, keep_path=False)
             self.copy(pattern="*.la", dst="lib", src=lib_dir, keep_path=False)
