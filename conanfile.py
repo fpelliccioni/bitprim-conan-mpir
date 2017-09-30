@@ -183,8 +183,8 @@ class BitprimMpirConan(ConanFile):
             lib_dir = '%s/.libs'  % (self.ZIP_FOLDER_NAME)
             self.output.warn("lib_dir: %s" % (lib_dir))
 
-            if not os.path.exists(directory):
-                os.makedirs(directory)
+            if not os.path.exists(dst_inc_dir):
+                os.makedirs(dst_inc_dir)
 
             shutil.copy('%s/mpir.h'  % (src_inc_dir), '%s/gmp.h'  % (dst_inc_dir))
             shutil.copy('%s/mpirxx.h'  % (src_inc_dir), '%s/gmpxx.h'  % (dst_inc_dir))
