@@ -227,10 +227,13 @@ class BitprimMpirConan(ConanFile):
             # self.run("dir %s" % (self.ZIP_FOLDER_NAME))
             # self.run("dir %s\*.a /s" % (self.ZIP_FOLDER_NAME))
             # self.run("dir %s\*.la /s" % (self.ZIP_FOLDER_NAME))
-            self.run("dir %s\*.so /s" % (self.ZIP_FOLDER_NAME))
+            # self.run("dir %s\*.so /s" % (self.ZIP_FOLDER_NAME))
+
+            self.run("dir %s\config.h /s" % (self.ZIP_FOLDER_NAME))
+            self.run("dir %s\gmp.h /s" % (self.ZIP_FOLDER_NAME))
 
             self.copy("*.h", dst="include", src=lib_dir, keep_path=True)
-            self.copy(pattern="*.so*", dst="lib", src=lib_dir, keep_path=False)
+            # self.copy(pattern="*.so*", dst="lib", src=lib_dir, keep_path=False)
             self.copy(pattern="*.a", dst="lib", src=lib_dir, keep_path=False)
             self.copy(pattern="*.la", dst="lib", src=lib_dir, keep_path=False)
 
