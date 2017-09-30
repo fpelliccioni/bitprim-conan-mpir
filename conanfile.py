@@ -188,19 +188,19 @@ class BitprimMpirConan(ConanFile):
 
             shutil.copy('%s/mpir.h'  % (src_inc_dir), '%s/gmp.h'  % (dst_inc_dir))
             shutil.copy('%s/mpirxx.h'  % (src_inc_dir), '%s/gmpxx.h'  % (dst_inc_dir))
+
             shutil.copy('%s/mpir.h'  % (src_inc_dir), '%s/'  % (dst_inc_dir))
             shutil.copy('%s/mpirxx.h'  % (src_inc_dir), '%s/'  % (dst_inc_dir))
+            shutil.copy('%s/config.h'  % (src_inc_dir), '%s/'  % (dst_inc_dir))
+            shutil.copy('%s/gmp-impl.h'  % (src_inc_dir), '%s/'  % (dst_inc_dir))
+            shutil.copy('%s/gmp-mparam.h'  % (src_inc_dir), '%s/'  % (dst_inc_dir))
+            shutil.copy('%s/longlong.h'  % (src_inc_dir), '%s/'  % (dst_inc_dir))
+            shutil.copy('%s/longlong_post.h'  % (src_inc_dir), '%s/'  % (dst_inc_dir))
+            shutil.copy('%s/longlong_pre.h'  % (src_inc_dir), '%s/'  % (dst_inc_dir))
+            shutil.copy('%s/randmt.h'  % (src_inc_dir), '%s/'  % (dst_inc_dir))
 
-#             shutil.copy('%s/mpirxx.h'  % (src_inc_dir), '%s/'  % (dst_inc_dir))
-
-# config.h
-# gmp-impl.h
-# gmp-mparam.h
-# longlong.h
-# randmt.h
-
-            # self.copy("*.h", dst="include", src='%s/.includes' % (inc_dir), keep_path=True)
-            self.copy("*.h", dst="include", src=src_inc_dir, keep_path=True)
+            self.copy("*.h", dst="include", src=dst_inc_dir, keep_path=False)
+            # self.copy("*.h", dst="include", src=src_inc_dir, keep_path=True)
             # self.copy(pattern="*.so*", dst="lib", src=lib_dir, keep_path=False)
             self.copy(pattern="*.a", dst="lib", src=lib_dir, keep_path=False)
             self.copy(pattern="*.la", dst="lib", src=lib_dir, keep_path=False)
