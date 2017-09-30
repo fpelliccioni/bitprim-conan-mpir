@@ -220,10 +220,10 @@ class BitprimMpirConan(ConanFile):
 
         if self.settings.os == "Windows" and self.settings.compiler == "gcc":
             # lib_dir = 'build/%s/lib/x64/Release'  % (self.ZIP_FOLDER_NAME)
-            lib_dir = '%s/.lib'  % (self.ZIP_FOLDER_NAME)
+            lib_dir = '%s/.libs'  % (self.ZIP_FOLDER_NAME)
             self.output.warn("lib_dir: %s" % (lib_dir))
 
-            self.run("dir %s\\.lib" % (self.ZIP_FOLDER_NAME))
+            self.run("dir %s\\.libs" % (self.ZIP_FOLDER_NAME))
             # self.run("dir %s" % (self.ZIP_FOLDER_NAME))
             # self.run("dir %s\*.a /s" % (self.ZIP_FOLDER_NAME))
             # self.run("dir %s\*.la /s" % (self.ZIP_FOLDER_NAME))
@@ -242,7 +242,7 @@ class BitprimMpirConan(ConanFile):
             self.copy(pattern="*.lib", dst="lib", src=lib_dir, keep_path=False)
         
     def package_info(self):
-        self.output.warn("*** self.cpp_info.libs:   %s" % (self.cpp_info.libs))
+        # self.output.warn("*** self.cpp_info.libs:   %s" % (self.cpp_info.libs))
         self.cpp_info.libs = ['mpir']
-        self.output.warn("*** self.cpp_info.libs:   %s" % (self.cpp_info.libs))
+        # self.output.warn("*** self.cpp_info.libs:   %s" % (self.cpp_info.libs))
 
