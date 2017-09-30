@@ -235,7 +235,7 @@ class BitprimMpirConan(ConanFile):
             shutil.copy('%s/mpir.h'  % (inc_dir), '%s/gmp.h'  % (inc_dir))
             shutil.copy('%s/mpirxx.h'  % (inc_dir), '%s/gmpxx.h'  % (inc_dir))
 
-            self.copy("*.h", dst="include", src=inc_dir, keep_path=True)
+            self.copy("*.h", dst="include", src=inc_dir, keep_path=False)
             # self.copy(pattern="*.so*", dst="lib", src=lib_dir, keep_path=False)
             self.copy(pattern="*.a", dst="lib", src=lib_dir, keep_path=False)
             self.copy(pattern="*.la", dst="lib", src=lib_dir, keep_path=False)
