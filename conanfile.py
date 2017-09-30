@@ -178,17 +178,29 @@ class BitprimMpirConan(ConanFile):
     def package(self):
 
         if self.settings.os == "Windows" and self.settings.compiler == "gcc":
-            inc_dir = '%s'  % (self.ZIP_FOLDER_NAME)
+            src_inc_dir = '%s'  % (self.ZIP_FOLDER_NAME)
+            dst_inc_dir = '%s/.includes'  % (self.ZIP_FOLDER_NAME)
             lib_dir = '%s/.libs'  % (self.ZIP_FOLDER_NAME)
             self.output.warn("lib_dir: %s" % (lib_dir))
 
-            shutil.copy('%s/mpir.h'  % (inc_dir), '%s/.includes/gmp.h'  % (inc_dir))
-            shutil.copy('%s/mpirxx.h'  % (inc_dir), '%s/.includes/gmpxx.h'  % (inc_dir))
-            shutil.copy('%s/mpir.h'  % (inc_dir), '%s/.includes/'  % (inc_dir))
-            shutil.copy('%s/mpirxx.h'  % (inc_dir), '%s/.includes/'  % (inc_dir))
+            if not os.path.exists(directory):
+                os.makedirs(directory)
+
+            shutil.copy('%s/mpir.h'  % (src_inc_dir), '%s/gmp.h'  % (dst_inc_dir))
+            shutil.copy('%s/mpirxx.h'  % (src_inc_dir), '%s/gmpxx.h'  % (dst_inc_dir))
+            shutil.copy('%s/mpir.h'  % (src_inc_dir), '%s/'  % (dst_inc_dir))
+            shutil.copy('%s/mpirxx.h'  % (src_inc_dir), '%s/'  % (dst_inc_dir))
+
+#             shutil.copy('%s/mpirxx.h'  % (src_inc_dir), '%s/'  % (dst_inc_dir))
+
+# config.h
+# gmp-impl.h
+# gmp-mparam.h
+# longlong.h
+# randmt.h
 
             # self.copy("*.h", dst="include", src='%s/.includes' % (inc_dir), keep_path=True)
-            self.copy("*.h", dst="include", src=inc_dir, keep_path=True)
+            self.copy("*.h", dst="include", src=src_inc_dir, keep_path=True)
             # self.copy(pattern="*.so*", dst="lib", src=lib_dir, keep_path=False)
             self.copy(pattern="*.a", dst="lib", src=lib_dir, keep_path=False)
             self.copy(pattern="*.la", dst="lib", src=lib_dir, keep_path=False)
