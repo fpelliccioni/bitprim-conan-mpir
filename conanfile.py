@@ -113,16 +113,10 @@ class BitprimMpirConan(ConanFile):
 
         if not os.path.exists('C:/Bitprim/usr/bin'):
             shutil.copytree('C:/Program Files/Git/usr/bin', 'C:/Bitprim/usr/bin')
-            # self.run("dir \"C:/Program Files/Git/usr/bin\"")
-            self.run("dir C:\\Bitprim\\usr\\bin")
 
-
-        # self.output.warn("*** PATH: %s" % (os.environ['PATH']))
         os.environ['PATH'] += os.pathsep + yasm_path
-        # self.output.warn("*** PATH: %s" % (os.environ['PATH']))
-
         os.environ['PATH'] = 'C:/Bitprim/usr/bin' + os.pathsep + os.environ['PATH']
-        self.output.warn("*** PATH: %s" % (os.environ['PATH']))
+        # self.output.warn("*** PATH: %s" % (os.environ['PATH']))
 
 
         if self.settings.os == "Windows" and self.settings.compiler == "Visual Studio":
@@ -140,30 +134,12 @@ class BitprimMpirConan(ConanFile):
 
         # elif self.settings.os == "Windows" and self.settings.compiler == "gcc":
         else:
-            # print(os.path.dirname(os.path.abspath(__file__)))
-            # print(os.getcwd())
-            # print('-*-*-*-*-*-*-*-*-*-*')
-            # print(os.environ['PATH'])
-
             old_path = os.environ['PATH']
             os.environ['PATH'] += os.pathsep + os.getcwd()
 
-
-            # print('-*-*-*-*-*-*-*-*-*-*')
-            # print(os.environ['PATH'])
-            # self.run("dir %s" % os.getcwd())
-
-            self.output.warn("*** $MAKE: %s" % (os.environ.get('MAKE')))
             os.environ['MAKE'] = 'mingw32-make'
-            self.output.warn("*** $MAKE: %s" % (os.environ.get('MAKE')))
-
-            self.output.warn("*** $SHELL: %s" % (os.environ.get('SHELL')))
-            # os.environ['SHELL'] = '"C:/Program Files/Git/usr/bin/sh.exe"'
-            os.environ['SHELL'] = 'pepe.exe'
-            self.output.warn("*** $SHELL: %s" % (os.environ.get('SHELL')))
-
-
-
+            # # os.environ['SHELL'] = '"C:/Program Files/Git/usr/bin/sh.exe"'
+            # os.environ['SHELL'] = 'pepe.exe'
             config_options_string = ""
 
             for option_name in self.options.values.fields:
@@ -182,34 +158,17 @@ class BitprimMpirConan(ConanFile):
 
             configure_command = "cd %s && %s ./configure --with-pic --enable-static --enable-shared %s %s" % (self.ZIP_FOLDER_NAME, self.generic_env_configure_vars(), config_options_string, disable_assembly)
             self.output.warn("*** configure_command: %s" % (configure_command))
-            # self.output.warn(configure_command)
             self.run(configure_command)
 
             # if self.settings.os == "Linux" or self.settings.os == "Macos":
             if self.settings.os != "Windows":
                 self.run("cd %s && make" % self.ZIP_FOLDER_NAME)
             else:
-
-                # self.env_info.path.append(os.path.join(self.package_folder, "bin"))
-                # self.env_info.MINGW_HOME = str(self.package_folder)
-                # self.env_info.CONAN_CMAKE_GENERATOR = "MinGW Makefiles"
-                # self.env_info.CXX = os.path.join(self.package_folder, "bin", "g++.exe")
-                # self.env_info.CC = os.path.join(self.package_folder, "bin", "gcc.exe")
-                # self.output.warn("*** self.env_info.MINGW_HOME: %s" % (self.env_info.MINGW_HOME))
-
-                # self.run("cd %s && type Makefile" % self.ZIP_FOLDER_NAME)
-
-                self.output.warn("*** $SHELL: %s" % (os.environ.get('SHELL')))
-
-                # self.run("dir C:\MinGw\bin\")
-                # self.run("cd %s && C:\MinGw\bin\make" % self.ZIP_FOLDER_NAME)
-                # self.run("cd %s && mingw32-make MAKE=mingw32-make SHELL=\"C:/Program Files/Git/usr/bin/sh.exe\"" % self.ZIP_FOLDER_NAME)
-                self.run("cd %s && mingw32-make MAKE=mingw32-make SHELL=pepe.exe" % self.ZIP_FOLDER_NAME)
-
+                # self.output.warn("*** $SHELL: %s" % (os.environ.get('SHELL')))
+                # self.run("cd %s && mingw32-make MAKE=mingw32-make SHELL=pepe.exe" % self.ZIP_FOLDER_NAME)
+                self.run("cd %s && mingw32-make MAKE=mingw32-make" % self.ZIP_FOLDER_NAME)
             os.environ['PATH'] = old_path
 
-            # print('-*-*-*-*-*-*-*-*-*-*')
-            # print(os.environ['PATH'])
 
     def imports(self):
         self.copy("m4", dst=".", src="bin")
@@ -223,19 +182,13 @@ class BitprimMpirConan(ConanFile):
             lib_dir = '%s/.libs'  % (self.ZIP_FOLDER_NAME)
             self.output.warn("lib_dir: %s" % (lib_dir))
 
-            # self.run("dir %s\\.libs" % (self.ZIP_FOLDER_NAME))
-            # self.run("dir %s" % (self.ZIP_FOLDER_NAME))
-            # self.run("dir %s\*.a /s" % (self.ZIP_FOLDER_NAME))
-            # self.run("dir %s\*.la /s" % (self.ZIP_FOLDER_NAME))
-            # self.run("dir %s\*.so /s" % (self.ZIP_FOLDER_NAME))
+            shutil.copy('%s/mpir.h'  % (inc_dir), '%s/.includes/gmp.h'  % (inc_dir))
+            shutil.copy('%s/mpirxx.h'  % (inc_dir), '%s/.includes/gmpxx.h'  % (inc_dir))
+            shutil.copy('%s/mpir.h'  % (inc_dir), '%s/.includes/'  % (inc_dir))
+            shutil.copy('%s/mpirxx.h'  % (inc_dir), '%s/.includes/'  % (inc_dir))
 
-            # self.run("dir %s\config.h /s" % (self.ZIP_FOLDER_NAME))
-            # self.run("dir %s\*.h /s" % (self.ZIP_FOLDER_NAME))
-
-            shutil.copy('%s/mpir.h'  % (inc_dir), '%s/gmp.h'  % (inc_dir))
-            shutil.copy('%s/mpirxx.h'  % (inc_dir), '%s/gmpxx.h'  % (inc_dir))
-
-            self.copy("*.h", dst="include", src=inc_dir, keep_path=False)
+            # self.copy("*.h", dst="include", src='%s/.includes' % (inc_dir), keep_path=True)
+            self.copy("*.h", dst="include", src=inc_dir, keep_path=True)
             # self.copy(pattern="*.so*", dst="lib", src=lib_dir, keep_path=False)
             self.copy(pattern="*.a", dst="lib", src=lib_dir, keep_path=False)
             self.copy(pattern="*.la", dst="lib", src=lib_dir, keep_path=False)
