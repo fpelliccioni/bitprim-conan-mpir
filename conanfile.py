@@ -5,13 +5,39 @@ from conans import CMake
 from conans import tools
 import subprocess
 import shutil
+import importlib
+
+
+microarchitecture_default = 'x86_64'
+
+def get_cpuid():
+    try:
+        cpuid = importlib.import_module('cpuid')
+        return cpuid
+    except ImportError:
+        # print("*** cpuid could not be imported")
+        return None
+
+def get_cpu_microarchitecture_or_default(default):
+    cpuid = get_cpuid()
+    if cpuid != None:
+        return '%s%s' % cpuid.cpu_microarchitecture()
+    else:
+        return default
+
+def get_cpu_microarchitecture():
+    return get_cpu_microarchitecture_or_default(microarchitecture_default)
+
 
 class BitprimMpirConan(ConanFile):
     name = "mpir"
     version = "3.0.0"
     url = "https://github.com/bitprim/bitprim-conan-mpir"
     ZIP_FOLDER_NAME = "mpir-%s" % version
-    generators = "cmake"
+    
+    # generators = "cmake"
+    generators = "txt"
+
     settings =  "os", "compiler", "arch", "build_type"
     build_policy = "missing"
 
@@ -20,15 +46,23 @@ class BitprimMpirConan(ConanFile):
                "enable_fat": [True, False],
                "enable_cxx": [True, False],
                "disable-fft": [True, False],
-               "enable-assert": [True, False]}
+               "enable-assert": [True, False],
+               "microarchitecture": "ANY" #["x86_64", "haswell", "ivybridge", "sandybridge", "bulldozer", ...]
+               }
 
     default_options = "shared=False", "disable_assembly=False", "enable_fat=False", \
-                      "enable_cxx=True", "disable-fft=False", "enable-assert=False"
+                      "enable_cxx=True", "disable-fft=False", "enable-assert=False", \
+                      "microarchitecture=_DUMMY_"
 
     # requires = "m4/1.4.18@bitprim/stable"
 
+    def configure(self):
+        if self.options.microarchitecture == "_DUMMY_":
+            self.options.microarchitecture = get_cpu_microarchitecture()
+        self.output.info("Compiling for microarchitecture: %s" % (self.options.microarchitecture,))
+
     def requirements(self):
-        if self.settings.os == "Windows" and self.settings.compiler == "gcc":
+        if self.settings.os == "Windows" and self.settings.compiler == "gcc": #MinGW
             self.requires.add("m4/1.4.18@bitprim/stable")
 
     def source(self):
@@ -71,11 +105,8 @@ class BitprimMpirConan(ConanFile):
             #     if file.endswith("yasm.exe"):
             #         print(os.path.join("C:/MinGw/bin/", file))
 
-    def config(self):
-        pass
-        # del self.settings.compiler.libcxx
 
-    def generic_env_configure_vars(self, verbose=False):
+    def _generic_env_configure_vars(self, verbose=False):
         """Reusable in any lib with configure!!"""
         command = ""
         if self.settings.os == "Linux" or self.settings.os == "Macos":
@@ -100,6 +131,17 @@ class BitprimMpirConan(ConanFile):
             command = "env %s %s %s %s" % (libs, ldflags, cflags, cpp_flags)
 
         return command
+
+    def _determine_host(self):
+        if self.settings.os == "Macos":
+            # nehalem-apple-darwin15.6.0
+            os_part = 'apple-darwin'
+        elif self.settings.os == "Linux":
+            os_part = 'pc-linux-gnu'
+
+        complete_host = "%s-%s" % (self.options.microarchitecture, os_part)
+        host_string = " --build=%s --host=%s" % (complete_host, complete_host)
+        return host_string
 
     def build(self):
         self.output.warn("*** Detected OS: %s" % (self.settings.os))
@@ -156,16 +198,13 @@ class BitprimMpirConan(ConanFile):
             
             disable_assembly = "--disable-assembly" if self.settings.arch == "x86" else ""
 
-            configure_command = "cd %s && %s ./configure --with-pic --enable-static --enable-shared %s %s" % (self.ZIP_FOLDER_NAME, self.generic_env_configure_vars(), config_options_string, disable_assembly)
+            configure_command = "cd %s && %s ./configure --with-pic --enable-static --enable-shared %s %s" % (self.ZIP_FOLDER_NAME, self._generic_env_configure_vars(), config_options_string, disable_assembly)
             self.output.warn("*** configure_command: %s" % (configure_command))
             self.run(configure_command)
 
-            # if self.settings.os == "Linux" or self.settings.os == "Macos":
             if self.settings.os != "Windows":
                 self.run("cd %s && make" % self.ZIP_FOLDER_NAME)
             else:
-                # self.output.warn("*** $SHELL: %s" % (os.environ.get('SHELL')))
-                # self.run("cd %s && mingw32-make MAKE=mingw32-make SHELL=pepe.exe" % self.ZIP_FOLDER_NAME)
                 self.run("cd %s && mingw32-make MAKE=mingw32-make" % self.ZIP_FOLDER_NAME)
             os.environ['PATH'] = old_path
 
@@ -217,3 +256,9 @@ class BitprimMpirConan(ConanFile):
         self.cpp_info.libs = ['mpir']
         # self.output.warn("*** self.cpp_info.libs:   %s" % (self.cpp_info.libs))
 
+
+
+
+    # def config(self):
+    #     pass
+    #     # del self.settings.compiler.libcxx
